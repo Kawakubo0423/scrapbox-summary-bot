@@ -1,0 +1,34 @@
+name: Weekly Scrapbox Summary
+
+on:
+  schedule:
+    - cron: '33 17 18 6 *'  # 6月18日 17:33 UTC（＝6月19日 2:33 JST）
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run summary script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SCRAPBOX_PROJECT: ${{ secrets.SCRAPBOX_PROJECT }}
+          SCRAPBOX_COOKIE: ${{ secrets.SCRAPBOX_COOKIE }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          WEBHOOK_KAWAKUBO: ${{ secrets.WEBHOOK_KAWAKUBO }}
+          WEBHOOK_OKAMO: ${{ secrets.WEBHOOK_OKAMO }}
+          WEBHOOK_SUENAGA: ${{ secrets.WEBHOOK_SUENAGA }}
+          CHANNEL_KAWAKUBO: ${{ secrets.CHANNEL_KAWAKUBO }}
+          CHANNEL_OKAMO: ${{ secrets.CHANNEL_OKAMO }}
+          CHANNEL_SUENAGA: ${{ secrets.CHANNEL_SUENAGA }}
+        run: node index.mjs "2025前期_Playfulゼミ_Week_8"
