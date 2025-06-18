@@ -1,0 +1,151 @@
+// scrapbox-summary-threaded.mjs  (anchor‑link & category feedback版)
+// ------------------------------------------------------------
+// Scrapbox ⇒ OpenAI (GPT‑4o) ⇒ Slack スレッド投稿
+//   1.  [** 🎤名前] で発表者ブロックを検出（anchor 取得）
+//   2.  行全体を AI に渡し
+//        ① 全体要約（親）
+//        ② 5 カテゴリ別要約（スレッド返信）
+//      を送信します
+//      ─ カテゴリ ────────────────
+//        👏 よかった点
+//        🔍 気づき / 新しい視点
+//        ⚠ 改善点
+//        🚧 次回までに修正
+//        ❓ 質問・不明点
+// ------------------------------------------------------------
+import fetch from 'node-fetch';
+import OpenAI from 'openai';
+import dotenv from 'dotenv';
+dotenv.config();
+
+/* --------- 0. 基本設定 ------------------------------------ */
+const openai  = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const PROJECT = process.env.SCRAPBOX_PROJECT;
+const COOKIE  = process.env.SCRAPBOX_COOKIE;
+const PAGE    = process.argv[2];
+if (!PROJECT || !COOKIE || !PAGE) {
+  console.error('使い方: node scrapbox-summary-threaded.mjs "ページタイトル"');
+  process.exit(1);
+}
+
+/* 日本語名 → 英字キー */
+const ALIAS = {
+  '川久保': 'KAWAKUBO',
+};
+
+
+/* 1. Scrapbox ページ取得 ------------------------------------ */
+const sbURL = `https://scrapbox.io/api/pages/${PROJECT}/${encodeURIComponent(PAGE)}`;
+const sbRes = await fetch(sbURL, { headers: { Cookie: COOKIE } });
+if (!sbRes.ok) { console.error(await sbRes.text()); process.exit(1); }
+const page = await sbRes.json();
+
+/* 2. 発表者ごとに行を束ねる -------------------------------- */
+const AUTHOR_RE = /^\s*\|?>?\s*\[\*\*\s*🎤\s*(.+?)\]/; // [** 🎤名前]
+const authors = [];          // [{author, anchor, lines:[] }]
+let curAuthor = null;
+
+for (const l of page.lines.slice(1)) {
+  const indent = l.text.match(/^\t*/)[0].length;
+  const raw    = l.text.replace(/^\t*/, '');
+
+  const am = indent === 0 ? raw.match(AUTHOR_RE) : null;
+  if (am) {
+    if (curAuthor) authors.push(curAuthor);
+    curAuthor = { author: am[1].trim(), anchor: l.id, lines: [] };
+    continue;
+  }
+  if (curAuthor) curAuthor.lines.push(raw);
+}
+if (curAuthor) authors.push(curAuthor);
+
+/* 3. 要約ヘルパ -------------------------------------------- */
+async function summarize(text){
+  const r = await openai.chat.completions.create({
+    model:'gpt-4o',
+    messages:[
+      {role:'system',content:'あなたは大学ゼミの議事録要約AIです。'},
+      {role:'user',  content:`以下を3行程度で、後で見返したときに分かりやすい全体要約を作成してください。\n\n###\n${text}`}
+    ],
+    max_tokens:256, temperature:0.2,
+  });
+  return r.choices[0].message.content.trim();
+}
+
+async function categorize(text){
+  const prompt=`以下のフィードバックを5つのカテゴリに分類し、各カテゴリ2〜4行で箇条書き要約してください。\n1) よかった点\n2) 気づき / 新しい視点\n3) 改善点\n4) 次回までに修正\n5) 質問・不明点\n\n###\n${text}`;
+  const r = await openai.chat.completions.create({
+    model:'gpt-4o',
+    messages:[{role:'user',content:prompt}],
+    max_tokens:512, temperature:0.2,
+  });
+  return r.choices[0].message.content.trim();
+}
+
+/* 4. Slack 投稿ヘルパ (Bot Token) --------------------------- */
+const BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
+if (!BOT_TOKEN) { console.error('SLACK_BOT_TOKEN missing'); process.exit(1);} 
+
+async function postMessage({channel, blocks, thread_ts=null}){
+  const body={channel, blocks, text:'_summary_', ...(thread_ts && {thread_ts})};
+  const r = await fetch('https://slack.com/api/chat.postMessage',{
+    method:'POST',
+    headers:{'Content-Type':'application/json', Authorization:`Bearer ${BOT_TOKEN}`},
+    body:JSON.stringify(body)
+  }).then(r=>r.json());
+  if(!r.ok){throw new Error('Slack error '+JSON.stringify(r));}
+  return r.ts;
+}
+
+/* 5. 送信ループ -------------------------------------------- */
+const CAT_ORDER=[
+  {key:'👏 よかった点',        emoji:'👏'},
+  {key:'🔍 気づき / 新しい視点',emoji:'🔍'},
+  {key:'⚠ 改善点',            emoji:'⚠'},
+  {key:'🚧 次回までに修正',    emoji:'🚧'},
+  {key:'❓ 質問・不明点',      emoji:'❓'},
+];
+
+for (const a of authors){
+  const key     = ALIAS[a.author];
+  if (!key) { console.warn(`🔸 ALIAS 未登録: ${a.author}`); continue; }
+  const channel = process.env['CHANNEL_'+key];
+  if(!channel){ console.warn(`⚠️ CHANNEL_${key} 未設定`); continue; }
+
+  /* (i) 全体要約 */
+  const rawText = a.lines.join('\n');
+  const overall = await summarize(rawText);
+
+  const jumpURL = `https://scrapbox.io/${PROJECT}/${encodeURIComponent(PAGE)}#${a.anchor}`;
+  const parent_ts = await postMessage({
+    channel,
+    blocks:[
+      {type:'section',text:{type:'mrkdwn',text:`*${a.author} さんへの全体要約* :memo:`}},
+      {type:'section',text:{type:'mrkdwn',text:overall}},
+      {type:'context',elements:[{type:'mrkdwn',text:`<${jumpURL}|元ページ（${a.author} セクションへ）>`}]}
+    ]
+  });
+
+  /* (ii) 5 カテゴリ別要約 */
+  const catText = await categorize(rawText);
+  const blocksByCat = catText.split(/\n(?=\p{Emoji_Presentation}|\d\))/u); // 分割
+
+  for (const block of blocksByCat){
+    const [title,...lines]=block.split(/\n+/);
+    const pretty=lines.map(l=>l.replace(/^[-•・]\s*/, '• ')).join('\n');
+    if (!pretty.trim()) {
+    console.warn(`⚠️ 空のカテゴリ要約をスキップ: ${title}`);
+        continue;
+    }
+    await postMessage({
+      channel, thread_ts:parent_ts,
+      blocks:[
+        {type:'section',text:{type:'mrkdwn',text:`*${title.trim()}*`}},
+        {type:'section',text:{type:'mrkdwn',text:pretty}}
+      ]
+    });
+  }
+  console.log(`✅ スレッド送信完了: ${a.author}`);
+}
+
+console.log('✨ All done.');
