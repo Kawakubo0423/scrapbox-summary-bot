@@ -1,6 +1,7 @@
 name: Weekly Scrapbox Summary
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '36 17 18 6 *'  # 6月18日 17:33 UTC（＝6月19日 2:33 JST）
 
