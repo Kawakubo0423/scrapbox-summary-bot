@@ -19,7 +19,7 @@ scrapbox-summary-bot/
 
 ---
 
-##　🤖 Slack Bot の設定方法（初回のみ）
+## 🤖 Slack Bot の設定方法（初回のみ）
 - Slack API にアクセスし、新しいアプリを作成
 - OAuth & Permissions の「Bot Token Scopes」に以下を追加：
 - chat:write
