@@ -5,14 +5,17 @@
 ---
 
 ## 📂 ディレクトリ構成）
-- scrapbox-summary-bot/
-- ├── .env              # Git管理外（個人のAPIキーなど）
-- ├── .gitignore
-- ├── index.mjs         # メイン処理
-- ├── package.json
-- └── .github/
--     └── workflows/
--         └── summarize.yml  # GitHub Actions 定義ファイル
+
+```
+scrapbox-summary-bot/
+├── .env              # Git管理外（個人のAPIキーなど）
+├── .gitignore
+├── index.mjs         # メイン処理
+├── package.json
+└── .github/
+    └── workflows/
+        └── summarize.yml  # GitHub Actions 定義ファイル
+```
 
 ---
 
@@ -50,6 +53,7 @@
 ---
 
 ## 🚀 実行方法（ローカル）
+
 - `.env` をプロジェクト直下に作成し、以下の情報を記述してください：
 - OPENAI_API_KEY=sk-xxxxx
 - SCRAPBOX_PROJECT=プロジェクト名
@@ -61,16 +65,22 @@
 ---
 
 ## 📤 README.md をコミット・プッシュする
-- ```bash
+
+```bash
 git add README.md
 git commit -m "📘 Add project README"
 git push origin main
 
+```
+
 ---
 
 ## 🚀 実行方法（ローカル手動）
-- ```bash
-- node index.mjs "ページタイトル"  # 例: node index.mjs "2025前期_Playfulゼミ_Week_XX"
+
+```bash
+node index.mjs "ページタイトル"  # 例: node index.mjs "2025前期_Playfulゼミ_Week_XX"
+
+```
 
 ---
 
@@ -91,15 +101,19 @@ git push origin main
 ---
 
 ## 📘 主要ファイルの説明
-- ファイル	説明
-- .env	APIキー・チャンネルID等の秘密情報（Git管理外）
-- index.mjs	Scrapbox要約とSlack投稿の本体スクリプト
-- summarize.yml	GitHub Actions で自動実行する設定
-- .gitignore	.env などをリポジトリに含めないための設定
+
+| ファイル | 説明 |
+----|----
+| .env | APIキー・チャンネルID等の秘密情報（Git管理外） |
+| index.mjs | Scrapbox要約とSlack投稿の本体スクリプト |
+| summarize.yml | GitHub Actions で自動実行する設定 |
+| .gitignore | .env などをリポジトリに含めないための設定 |
+
 
 ---
 
 ## 🙋‍♂️ 補足
+
 - Scrapbox ページタイトルは index.mjs 側で自動計算できます（ゼミ第〇週）
 - GitHub Actions のエラーは Actionsタブ から確認できます
 - 複数チャンネルに投げる場合は .env に複数の CHANNEL_◯◯ を登録することで拡張可能
