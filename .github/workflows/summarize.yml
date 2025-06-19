@@ -29,7 +29,26 @@ jobs:
           WEBHOOK_KAWAKUBO: ${{ secrets.WEBHOOK_KAWAKUBO }}
           WEBHOOK_SUENAGA: ${{ secrets.WEBHOOK_SUENAGA }}
           WEBHOOK_OKAMO: ${{ secrets.WEBHOOK_OKAMO }}
+          CHANNEL_SATO: ${{ secrets.CHANNEL_SATO }}
+          CHANNEL_MAKINO: ${{ secrets.CHANNEL_MAKINO }}
+          CHANNEL_USUI: ${{ secrets.CHANNEL_USUI }}
+          CHANNEL_YAMASHITA: ${{ secrets.CHANNEL_YAMASHITA }}
+          CHANNEL_TANAKA: ${{ secrets.CHANNEL_TANAKA }}
           CHANNEL_KAWAKUBO: ${{ secrets.CHANNEL_KAWAKUBO }}
           CHANNEL_SUENAGA: ${{ secrets.CHANNEL_SUENAGA }}
           CHANNEL_OKAMO: ${{ secrets.CHANNEL_OKAMO }}
+          CHANNEL_MIMA: ${{ secrets.CHANNEL_MIMA }}
+          CHANNEL_WAKISAKA: ${{ secrets.CHANNEL_WAKISAKA }}
+          CHANNEL_LIU: ${{ secrets.CHANNEL_LIU }}
+          CHANNEL_UEDA: ${{ secrets.CHANNEL_UEDA }}
+          CHANNEL_OGAWA: ${{ secrets.CHANNEL_OGAWA }}
+          CHANNEL_KATO: ${{ secrets.CHANNEL_KATO }}
+          CHANNEL_KIGOSHI: ${{ secrets.CHANNEL_KIGOSHI }}
+          CHANNEL_KUBOTA: ${{ secrets.CHANNEL_KUBOTA }}
+          CHANNEL_SAKAMOTO: ${{ secrets.CHANNEL_SAKAMOTO }}
+          CHANNEL_TAKAGI: ${{ secrets.CHANNEL_TAKAGI }}
+          CHANNEL_TAKEUCHI: ${{ secrets.CHANNEL_TAKEUCHI }}
+          CHANNEL_NISHIMOTO: ${{ secrets.CHANNEL_NISHIMOTO }}
+          CHANNEL_MATSUNO: ${{ secrets.CHANNEL_MATSUNO }}
+          CHANNEL_MARUHASHI: ${{ secrets.CHANNEL_MARUHASHI }}
         run: node index.mjs
