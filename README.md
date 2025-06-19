@@ -62,9 +62,9 @@
 
 ## 📤 README.md をコミット・プッシュする
 - ```bash
-- git add README.md
-- git commit -m "📘 Add project README"
-- git push origin main
+git add README.md
+git commit -m "📘 Add project README"
+git push origin main
 
 ---
 
