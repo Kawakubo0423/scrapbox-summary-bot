@@ -40,9 +40,28 @@ if (!PROJECT || !COOKIE || !PAGE) {
 
 /* 日本語名 → 英字キー */
 const ALIAS = {
-  '川久保': 'KAWAKUBO',
-  '末永': 'SUENAGA',
-  '岡茂': 'OKAMO',
+    '佐藤': 'SATO',
+    '牧野': 'MAKINO',
+    '臼井': 'USUI',
+    '田中': 'TANAKA',
+    '山下': 'YAMASHITA',
+    '川久保': 'KAWAKUBO',
+    '末永': 'SUENAGA',
+    '岡茂': 'OKAMO',
+    '美馬': 'MIMA',
+    '脇坂': 'WAKISAKA',
+    'LIU': 'LIU',
+    '上田': 'UEDA',
+    '小川': 'OGAWA',
+    '加藤': 'KATO',
+    '木越': 'KIGOSHI',
+    '久保田': 'KUBOTA',
+    '坂本': 'SAKAMOTO',
+    '高木': 'TAKAGI',
+    '竹内': 'TAKEUCHI',
+    '西本': 'NISHIMOTO',
+    '松野': 'MATSUNO',
+    '丸橋': 'MARUHASHI',
 };
 
 
