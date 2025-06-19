@@ -23,8 +23,8 @@ const openai  = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const PROJECT = process.env.SCRAPBOX_PROJECT;
 const COOKIE  = process.env.SCRAPBOX_COOKIE;
 function getZemiWeekTitle() {
-  const baseDate = new Date('2025-05-12'); // Week 11 の月曜
-  const now = new Date('2025-06-02');
+  const baseDate = new Date('2025-05-12'); // Week 5 の月曜
+  const now = new Date('2025-06-09'); // 現在の日付
   const diffWeeks = Math.floor((now - baseDate) / (7 * 24 * 60 * 60 * 1000));
   const weekNum = 5 + diffWeeks;
   return `2025前期_Playfulゼミ_Week_${weekNum}`;
@@ -41,6 +41,8 @@ if (!PROJECT || !COOKIE || !PAGE) {
 /* 日本語名 → 英字キー */
 const ALIAS = {
   '川久保': 'KAWAKUBO',
+  '末永': 'SUENAGA',
+  '岡茂': 'OKAMO',
 };
 
 

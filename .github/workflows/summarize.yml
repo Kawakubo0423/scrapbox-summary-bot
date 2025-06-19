@@ -27,5 +27,9 @@ jobs:
           SCRAPBOX_COOKIE: ${{ secrets.SCRAPBOX_COOKIE }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           WEBHOOK_KAWAKUBO: ${{ secrets.WEBHOOK_KAWAKUBO }}
+          WEBHOOK_SUENAGA: ${{ secrets.WEBHOOK_SUENAGA }}
+          WEBHOOK_OKAMO: ${{ secrets.WEBHOOK_OKAMO }}
           CHANNEL_KAWAKUBO: ${{ secrets.CHANNEL_KAWAKUBO }}
+          CHANNEL_SUENAGA: ${{ secrets.CHANNEL_SUENAGA }}
+          CHANNEL_OKAMO: ${{ secrets.CHANNEL_OKAMO }}
         run: node index.mjs
