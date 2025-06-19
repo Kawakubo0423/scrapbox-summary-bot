@@ -28,4 +28,4 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           WEBHOOK_KAWAKUBO: ${{ secrets.WEBHOOK_KAWAKUBO }}
           CHANNEL_KAWAKUBO: ${{ secrets.CHANNEL_KAWAKUBO }}
-        run: node index.mjs "2025前期_Playfulゼミ_Week_8"
+        run: node index.mjs

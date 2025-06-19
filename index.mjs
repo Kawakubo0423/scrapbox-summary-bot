@@ -1,4 +1,4 @@
-// scrapbox-summary-threaded.mjs  (anchor‑link & category feedback版)
+// index.mjs  (anchor‑link & category feedback版)
 // ------------------------------------------------------------
 // Scrapbox ⇒ OpenAI (GPT‑4o) ⇒ Slack スレッド投稿
 //   1.  [** 🎤名前] で発表者ブロックを検出（anchor 取得）
@@ -22,11 +22,21 @@ dotenv.config();
 const openai  = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const PROJECT = process.env.SCRAPBOX_PROJECT;
 const COOKIE  = process.env.SCRAPBOX_COOKIE;
-const PAGE    = process.argv[2];
+function getZemiWeekTitle() {
+  const baseDate = new Date('2025-06-23'); // Week 11 の月曜
+  const now = new Date();
+  const diffWeeks = Math.floor((now - baseDate) / (7 * 24 * 60 * 60 * 1000));
+  const weekNum = 11 + diffWeeks;
+  return `2025前期_Playfulゼミ_Week_${weekNum}`;
+}
+
+const PAGE = process.argv[2] || getZemiWeekTitle();
+
 if (!PROJECT || !COOKIE || !PAGE) {
-  console.error('使い方: node scrapbox-summary-threaded.mjs "ページタイトル"');
+  console.error('使い方: node index.mjs "ページタイトル" または引数なしで実行');
   process.exit(1);
 }
+
 
 /* 日本語名 → 英字キー */
 const ALIAS = {
