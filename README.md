@@ -52,9 +52,8 @@ scrapbox-summary-bot/
 
 ---
 
-## 🚀 実行方法（ローカル）
-
-- `.env` をプロジェクト直下に作成し、以下の情報を記述してください：
+## 📝 環境変数
+`.env` をプロジェクト直下に作成し、以下の情報を記述してください：
 - OPENAI_API_KEY=sk-xxxxx
 - SCRAPBOX_PROJECT=プロジェクト名
 - SCRAPBOX_COOKIE=connect.sid=xxxxx
@@ -91,6 +90,7 @@ node index.mjs "ページタイトル"  # 例: node index.mjs "2025前期_Playfu
 - cron の時刻は UTC 時間なので JST に変換すること（+9時間）
 - Slack に投稿されない場合、Bot がチャンネルに招待されているか確認
 - CHANNEL_名前 の環境変数（例：CHANNEL_KAWAKUBO）を忘れず .env に追加
+- index.mjsのALIASに名前の対応表を追加する
 
 ---
 
