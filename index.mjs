@@ -78,7 +78,7 @@ const page = await sbRes.json();
 
 /* 2. 発表者ごとに行を束ねる -------------------------------- */
 const AUTHOR_RE = /^\s*\|?>?\s*\[\*\*\s*🎤\s*(.+?)\]/; // [** 🎤名前]
-const META_RE   = /^\s*\[\*\s*メタなこと\]/;           // [* メタなこと]
+const META_RE   = /^\s*\|?>\s*メタなこと/;          // [* メタなこと]
 const authors = [];          // [{author, anchor, lines:[] }]
 let curAuthor = null;
 
@@ -127,6 +127,18 @@ async function categorize(text){
   return r.choices[0].message.content.trim();
 }
 
+// ★ メタ専用：話題ごとに 1 行箇条書き
+async function summarizeMeta(text){
+  const prompt = `
+次のテキストを「話題ごと」にまとめ、各話題を・（中黒）から始めて 1 行以内の日本語にしてください。順序は原文のまま、箇条書きのみを返してください。###${text}`;
+  const r = await openai.chat.completions.create({
+    model:'gpt-4o',
+    messages:[{role:'user',content:prompt}],
+    max_tokens:512, temperature:0.2,
+  });
+  return r.choices[0].message.content.trim();
+}
+
 /* 4. Slack 投稿ヘルパ (Bot Token) --------------------------- */
 const BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 if (!BOT_TOKEN) { console.error('SLACK_BOT_TOKEN missing'); process.exit(1);} 
@@ -152,30 +164,37 @@ const CAT_ORDER=[
 ];
 
 for (const a of authors){
-    // ★ 対象者フィルタリング
-  if (SELECT_AUTHORS &&                       // リストが指定されており
-      !SELECT_AUTHORS.includes(a.author) &&   // ・日本語名が含まれず
-      !SELECT_AUTHORS.includes(ALIAS[a.author] || '')) { // ・英字キーも含まれなければ
-    console.log(`⏭️ スキップ: ${a.author}`);
-    continue;                                 // → この発表者は飛ばす
-  }
 
-  // ★ メタブロックは SELECT_AUTHORS フィルタ対象外にし、専用チャンネルへ
-  if (a.author === 'メタなこと') {
-    const channel = process.env.CHANNEL_META || process.env.CHANNEL_ALL || process.env.CHANNEL_ZENTAI;
-    if (!channel) { console.warn('⚠️ CHANNEL_META 未設定'); continue; }
+    // ★ まず「メタなこと」を最優先で処理 --------------------
+    if (a.author === 'メタなこと') {
+        const channel = process.env.CHANNEL_META
+                    || process.env.CHANNEL_ALL
+                    || process.env.CHANNEL_ZENTAI;
+        if (!channel) { console.warn('⚠️ CHANNEL_META 未設定'); continue; }
 
-    const overall = await summarize(a.lines.join('\n'));
-    await postMessage({
-      channel,
-      blocks:[
-        {type:'section',text:{type:'mrkdwn',text:'*:information_source:  今週の「メタなこと」まとめ*'}},
-        {type:'section',text:{type:'mrkdwn',text:overall}},
-      ]
-    });
-    console.log('✅ メタなことを投稿しました');
-    continue;        // 発表者用ロジックへ進まない
-  }
+        const overall  = await summarizeMeta(a.lines.join('\n'));
+        const jumpURL  = `https://scrapbox.io/${PROJECT}/${encodeURIComponent(PAGE)}#${a.anchor}`;
+        await postMessage({
+        channel,
+        blocks:[
+            {type:'section',text:{type:'mrkdwn',
+                text:'*:information_source:  今週の「メタなこと」まとめ*'}},
+            {type:'section',text:{type:'mrkdwn',
+                text:overall.replace(/^・/gm,'• ') }}, // ・→• に置換して見栄え統一
+        ]
+        });
+        console.log('✅ メタなことを投稿しました');
+        continue;                  // 発表者ロジックへ進まない
+    }
+
+    // ★ 対象者フィルタリング（メタ以外） --------------------
+    if (SELECT_AUTHORS &&
+        !SELECT_AUTHORS.includes(a.author) &&
+        !SELECT_AUTHORS.includes(ALIAS[a.author] || '')) {
+        console.log(`⏭️ スキップ: ${a.author}`);
+        continue;
+    }
+
 
   const key     = ALIAS[a.author];   // 以下は従来どおり発表者処理
 
