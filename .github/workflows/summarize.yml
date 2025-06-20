@@ -57,4 +57,5 @@ jobs:
           CHANNEL_MATSUNO: ${{ secrets.CHANNEL_MATSUNO }}
           CHANNEL_MARUHASHI: ${{ secrets.CHANNEL_MARUHASHI }}
           SELECT_AUTHORS: ${{ github.event.inputs.authors }}   # ← 追加
+          CHANNEL_META: ${{ secrets.CHANNEL_META }}
         run: node index.mjs

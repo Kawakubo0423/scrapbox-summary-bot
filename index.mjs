@@ -78,6 +78,7 @@ const page = await sbRes.json();
 
 /* 2. 発表者ごとに行を束ねる -------------------------------- */
 const AUTHOR_RE = /^\s*\|?>?\s*\[\*\*\s*🎤\s*(.+?)\]/; // [** 🎤名前]
+const META_RE   = /^\s*\[\*\s*メタなこと\]/;           // [* メタなこと]
 const authors = [];          // [{author, anchor, lines:[] }]
 let curAuthor = null;
 
@@ -91,6 +92,14 @@ for (const l of page.lines.slice(1)) {
     curAuthor = { author: am[1].trim(), anchor: l.id, lines: [] };
     continue;
   }
+
+  const mm = indent === 0 ? raw.match(META_RE) : null; // ② メタブロック
+  if (mm) {
+    if (curAuthor) authors.push(curAuthor);
+    curAuthor = { author: 'メタなこと', anchor: l.id, lines: [] };
+    continue;
+  }
+
   if (curAuthor) curAuthor.lines.push(raw);
 }
 if (curAuthor) authors.push(curAuthor);
@@ -150,7 +159,26 @@ for (const a of authors){
     console.log(`⏭️ スキップ: ${a.author}`);
     continue;                                 // → この発表者は飛ばす
   }
-  const key     = ALIAS[a.author];
+
+  // ★ メタブロックは SELECT_AUTHORS フィルタ対象外にし、専用チャンネルへ
+  if (a.author === 'メタなこと') {
+    const channel = process.env.CHANNEL_META || process.env.CHANNEL_ALL || process.env.CHANNEL_ZENTAI;
+    if (!channel) { console.warn('⚠️ CHANNEL_META 未設定'); continue; }
+
+    const overall = await summarize(a.lines.join('\n'));
+    await postMessage({
+      channel,
+      blocks:[
+        {type:'section',text:{type:'mrkdwn',text:'*:information_source:  今週の「メタなこと」まとめ*'}},
+        {type:'section',text:{type:'mrkdwn',text:overall}},
+      ]
+    });
+    console.log('✅ メタなことを投稿しました');
+    continue;        // 発表者用ロジックへ進まない
+  }
+
+  const key     = ALIAS[a.author];   // 以下は従来どおり発表者処理
+
   if (!key) { console.warn(`🔸 ALIAS 未登録: ${a.author}`); continue; }
   const channel = process.env['CHANNEL_'+key];
   if(!channel){ console.warn(`⚠️ CHANNEL_${key} 未設定`); continue; }
