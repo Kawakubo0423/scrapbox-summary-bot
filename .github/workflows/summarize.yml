@@ -2,6 +2,11 @@ name: Weekly Scrapbox Summary
 
 on:
   workflow_dispatch:
+    inputs:
+      authors:
+        description: '要約を送る発表者をコンマ区切りで入力（空欄 → 全員）'
+        required: false
+        default: ''
   schedule:
     - cron: '0 4 * * 1'  # 毎週月曜13:00 JST
 
@@ -51,4 +56,5 @@ jobs:
           CHANNEL_NISHIMOTO: ${{ secrets.CHANNEL_NISHIMOTO }}
           CHANNEL_MATSUNO: ${{ secrets.CHANNEL_MATSUNO }}
           CHANNEL_MARUHASHI: ${{ secrets.CHANNEL_MARUHASHI }}
+          SELECT_AUTHORS: ${{ github.event.inputs.authors }}   # ← 追加
         run: node index.mjs

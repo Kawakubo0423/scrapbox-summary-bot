@@ -20,6 +20,11 @@ dotenv.config();
 
 /* --------- 0. 基本設定 ------------------------------------ */
 const openai  = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// ★ workflow_dispatch で渡した SELECT_AUTHORS を配列化
+//    - 空文字列や未設定なら null にして「全員対象」
+const SELECT_AUTHORS = process.env.SELECT_AUTHORS
+  ? process.env.SELECT_AUTHORS.split(',').map(s => s.trim()).filter(Boolean)
+  : null;
 const PROJECT = process.env.SCRAPBOX_PROJECT;
 const COOKIE  = process.env.SCRAPBOX_COOKIE;
 function getZemiWeekTitle() {
@@ -138,6 +143,13 @@ const CAT_ORDER=[
 ];
 
 for (const a of authors){
+    // ★ 対象者フィルタリング
+  if (SELECT_AUTHORS &&                       // リストが指定されており
+      !SELECT_AUTHORS.includes(a.author) &&   // ・日本語名が含まれず
+      !SELECT_AUTHORS.includes(ALIAS[a.author] || '')) { // ・英字キーも含まれなければ
+    console.log(`⏭️ スキップ: ${a.author}`);
+    continue;                                 // → この発表者は飛ばす
+  }
   const key     = ALIAS[a.author];
   if (!key) { console.warn(`🔸 ALIAS 未登録: ${a.author}`); continue; }
   const channel = process.env['CHANNEL_'+key];
