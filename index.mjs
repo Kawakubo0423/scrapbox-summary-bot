@@ -109,7 +109,7 @@ async function summarize(text){
 }
 
 async function categorize(text){
-  const prompt=`以下のフィードバックを5つのカテゴリに分類し、各カテゴリ2〜4行で箇条書き要約してください。\n1) よかった点\n2) 気づき / 新しい視点\n3) 改善点\n4) 次回までに修正\n5) 質問・不明点\n\n###\n${text}`;
+  const prompt=`以下のフィードバックを5つのカテゴリに分類し、各カテゴリ3〜4行で箇条書き要約してください。\n1) よかった点\n2) 気づき / 新しい視点\n3) 改善点\n4) 次回までに修正\n5) 質問・不明点\n\n###\n${text}`;
   const r = await openai.chat.completions.create({
     model:'gpt-4o',
     messages:[{role:'user',content:prompt}],
