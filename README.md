@@ -39,6 +39,7 @@ scrapbox-summary-bot/
 - Slack にスレッド形式で自動投稿
 - GitHub Actions による定期自動実行（例：毎週月曜13時）
 - ページ名（例：`2025前期_Playfulゼミ_Week_11`）を日付から自動生成
+- GitHub Actions → Run workflow → “authors” に 佐藤,田中 などを入力 → 実行で選択した人にだけ通知
 
 ---
 
