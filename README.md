@@ -55,10 +55,10 @@ scrapbox-summary-bot/
 
 ## 📝 環境変数
 `.env` をプロジェクト直下に作成し、以下の情報を記述してください：
-- OPENAI_API_KEY=sk-xxxxx
+- SLACK_BOT_TOKEN=<YOUR_SLACK_BOT_TOKEN>
 - SCRAPBOX_PROJECT=プロジェクト名
 - SCRAPBOX_COOKIE=connect.sid=xxxxx
-- SLACK_BOT_TOKEN=xoxb-xxxxx
+- SLACK_BOT_TOKEN=<YOUR_SLACK_BOT_TOKEN>
 - WEBHOOK_KAWAKUBO=https://hooks.slack.com/services/xxxxx
 - CHANNEL_KAWAKUBO=チャンネルID（例: C01234567）
 
