@@ -8,13 +8,30 @@
 
 ```
 scrapbox-summary-bot/
-├── .env              # Git管理外（個人のAPIキーなど）
+├── .env                         # ★Git には入れない個人用環境変数
 ├── .gitignore
-├── index.mjs         # メイン処理
+├── .editorconfig
+├── .prettierrc
+├── index.mjs                    # Scrapbox → Slack 本体
+├── scrapbox-summary-dry-run.mjs # ローカル確認用スクリプト
+├── server.mjs                   # （任意）簡易ローカルサーバ
+├── test-openai.mjs              # テスト用
 ├── package.json
-└── .github/
-    └── workflows/
-        └── summarize.yml  # GitHub Actions 定義ファイル
+├── package-lock.json
+├── README.md
+├── .github/
+│   └── workflows/
+│       ├── summarize.yml        # 定期 & 手動実行で index.mjs を回す
+│       └── worker-deploy.yml    # push 時に Cloudflare Workers へ自動デプロイ
+└── your-worker/                 # Cloudflare Workers プロジェクト
+    ├── wrangler.jsonc           # Worker のメタ設定（Secrets は未記載）
+    ├── .dev.vars                # ローカル wrangler dev 用環境変数（Git追跡外推奨）
+    ├── src/
+    │   └── index.js             # Slack “要約を再生成” を処理する Worker 本体
+    ├── test/                    # Worker 用テスト（任意）
+    ├── .vscode/                 # VS Code 推奨設定（任意）
+    └── node_modules/            # Worker 側の依存（Git には含めない）
+
 ```
 
 ---
@@ -58,18 +75,22 @@ scrapbox-summary-bot/
 - SLACK_BOT_TOKEN=<YOUR_SLACK_BOT_TOKEN>
 - SCRAPBOX_PROJECT=プロジェクト名
 - SCRAPBOX_COOKIE=connect.sid=xxxxx
-- SLACK_BOT_TOKEN=<YOUR_SLACK_BOT_TOKEN>
+- SLACK_SIGNING_SECRET=<.envに記載>
 - WEBHOOK_KAWAKUBO=https://hooks.slack.com/services/xxxxx
 - CHANNEL_KAWAKUBO=チャンネルID（例: C01234567）
 
+
 ---
 
-## 📤 README.md をコミット・プッシュする
+## 📤 変更をコミット・プッシュする
 
 ```bash
-git add README.md
-git commit -m "📘 Add project README"
+# いま your-worker/ の中にいる
+cd ..              # ← repo ルートへ戻る
+git add your-worker .github/workflows/worker-deploy.yml
+git commit -m "feat(worker): add Cloudflare Worker and workflow"
 git push origin main
+
 
 ```
 
@@ -78,7 +99,20 @@ git push origin main
 ## 🚀 実行方法（ローカル手動）
 
 ```bash
+cd scrapbox-summary-bot
 node index.mjs "ページタイトル"  # 例: node index.mjs "2025前期_Playfulゼミ_Week_XX"
+SELECT_AUTHORS="佐藤,山下" node index.mjs "ページタイトル". #発表者を指定する場合
+
+```
+
+---
+
+## 🚀 デプロイ方法（ローカル手動）
+
+```bash
+cd your-worker
+wrangler deploy
+wrangler tail   #ログ確認
 
 ```
 
