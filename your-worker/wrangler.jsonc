@@ -7,6 +7,7 @@
 	"name": "your-worker",
 	"main": "src/index.js",
 	"compatibility_date": "2025-06-20",
+	"account_id": "5e9497618f45c01bceb8ddd60cfecd8b",
 	"observability": {
 		"enabled": true
 	},
