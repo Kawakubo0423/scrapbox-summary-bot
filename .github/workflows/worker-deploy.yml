@@ -1,0 +1,36 @@
+name: Deploy Cloudflare Worker
+
+on:
+  push:
+    branches: [ main ]         # ← main ブランチへ push した時だけ
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      - name: Publish Worker
+        env:
+          CF_API_TOKEN:  ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SCRAPBOX_COOKIE: ${{ secrets.SCRAPBOX_COOKIE }}
+        working-directory: ./your-worker
+        run: |
+          # 1) 機密 env を dev.vars に書き込む（CI 内のみ）
+          cat <<EOF > .dev.vars
+          SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_SIGNING_SECRET=${{ secrets.SLACK_SIGNING_SECRET }}
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          SCRAPBOX_COOKIE=${{ secrets.SCRAPBOX_COOKIE }}
+          EOF
+          # 2) デプロイ
+          wrangler deploy --account-id $CF_ACCOUNT_ID --commit-dirty

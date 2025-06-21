@@ -1,2 +1,5 @@
 .env
 node_modules/
+
+# Wrangler
+your-worker/.dev.varsyour-worker/.wrangler.jsonc.swp

@@ -207,14 +207,40 @@ for (const a of authors){
   const overall = await summarize(rawText);
 
   const jumpURL = `https://scrapbox.io/${PROJECT}/${encodeURIComponent(PAGE)}#${a.anchor}`;
-  const parent_ts = await postMessage({
-    channel,
-    blocks:[
-      {type:'section',text:{type:'mrkdwn',text:`*${a.author} さんへの全体要約* :memo:`}},
-      {type:'section',text:{type:'mrkdwn',text:overall}},
-      {type:'context',elements:[{type:'mrkdwn',text:`<${jumpURL}|元ページ（${a.author} セクションへ）>`}]}
-    ]
-  });
+
+// まず最初に postMessage をして parent_ts を取得
+let parent_ts = await postMessage({
+  channel,
+  blocks:[
+    { type: 'section', text: { type: 'mrkdwn', text: `*${a.author} さんへの全体要約* :memo:` }},
+    { type: 'section', text: { type: 'mrkdwn', text: overall }},
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `<${jumpURL}|元ページ（${a.author} セクションへ）>` }] }
+  ]
+});
+
+// そのあと「ボタン付き」ブロックを追加送信（親メッセージに返信）
+await postMessage({
+  channel,
+  thread_ts: parent_ts,
+  blocks: [
+    {
+      type: 'actions',
+      elements: [{
+        type: 'button',
+        text: { type: 'plain_text', text: '🔄 要約を再生成' },
+        style: 'primary',
+        action_id: 'retry-summary',
+        value: JSON.stringify({
+            page: PAGE,
+            anchor: a.anchor,
+            author: a.author,
+            channel,
+            thread_ts: parent_ts
+            })
+      }]
+    }
+  ]
+});
 
   /* (ii) 5 カテゴリ別要約 */
   const catText = await categorize(rawText);
