@@ -77,7 +77,7 @@ if (!sbRes.ok) { console.error(await sbRes.text()); process.exit(1); }
 const page = await sbRes.json();
 
 /* 2. 発表者ごとに行を束ねる -------------------------------- */
-const AUTHOR_RE = /^\s*\|?>?\s*\[\*\*\s*🎤\s*(.+?)\]/; // [** 🎤名前]
+const AUTHOR_RE = /^\s*\|?>?\s*\[\*\s*🎤\s*(.+?)\]/; // [** 🎤名前]
 const META_RE   = /^\s*\|?>\s*メタなこと/;          // [* メタなこと]
 const authors = [];          // [{author, anchor, lines:[] }]
 let curAuthor = null;
