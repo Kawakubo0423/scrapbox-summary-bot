@@ -7,8 +7,8 @@ on:
         description: '要約を送る発表者をコンマ区切りで入力（空欄 → 全員）'
         required: false
         default: ''
-  #schedule:
-    #- cron: '0 4 * * 1'  # 毎週月曜13:00 JST
+  schedule:
+    - cron: '0 4 * * 1'  # 毎週月曜13:00 JST
 
 jobs:
   summarize:
