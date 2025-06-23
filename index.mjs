@@ -177,10 +177,14 @@ for (const a of authors){
         await postMessage({
         channel,
         blocks:[
-            {type:'section',text:{type:'mrkdwn',
-                text:'*:information_source:  今週の「メタなこと」まとめ*'}},
-            {type:'section',text:{type:'mrkdwn',
-                text:overall.replace(/^・/gm,'• ') }}, // ・→• に置換して見栄え統一
+            { type:'section', text:{ type:'mrkdwn',
+            text:'*:information_source:  今週の「メタなこと」まとめ*'} },
+            { type:'section', text:{ type:'mrkdwn',
+            text: overall.replace(/^・/gm,'• ') } },   // 要約本体
+            { type:'context',  elements:[               // ← 追加ブロック
+            { type:'mrkdwn',
+                text:`<${jumpURL}|Scrapbox の元ページ（メタなことへ）>` }
+            ] }
         ]
         });
         console.log('✅ メタなことを投稿しました');
