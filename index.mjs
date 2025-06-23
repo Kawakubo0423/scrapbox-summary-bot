@@ -29,7 +29,7 @@ const PROJECT = process.env.SCRAPBOX_PROJECT;
 const COOKIE  = process.env.SCRAPBOX_COOKIE;
 function getZemiWeekTitle() {
   const baseDate = new Date('2025-05-12'); // Week 5 の月曜
-  const now = new Date(); // 現在の日付
+  const now = new Date('2025-06-04'); // 現在の日付
   const diffWeeks = Math.floor((now - baseDate) / (7 * 24 * 60 * 60 * 1000));
   const weekNum = 5 + diffWeeks;
   return `2025前期_Playfulゼミ_Week_${weekNum}`;
