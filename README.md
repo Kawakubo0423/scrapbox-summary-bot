@@ -161,4 +161,19 @@ wrangler tail   #ログ確認
 - 複数チャンネルに投げる場合は .env に複数の CHANNEL_◯◯ を登録することで拡張可能
 
 
+## 💸 OpenAPIキーの課金上限に達した時
+
+- 時間あたりの RateLimit でなく、月次の quota が 0 になっていないか
+- 有効なカードがあるか、予算上限に達していないか
+    - もしAPIキーが使えなくなったら、一旦新しいキーに差し替え
+    - GithubのSecrets＋Cloudflare Worker の Secret
+
+```bash
+
+cd your-worker.  # Worker プロジェクト直下
+# ❶ 新しいキーを上書き
+echo "sk-NEW-API-KEY" | wrangler secret put OPENAI_API_KEY
+wrangler deploy
+
+```
 
