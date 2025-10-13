@@ -67,6 +67,7 @@ const ALIAS = {
     '西本': 'NISHIMOTO',
     '松野': 'MATSUNO',
     '丸橋': 'MARUHASHI',
+    '左': 'ZUO',
 };
 
 
