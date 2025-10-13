@@ -133,6 +133,7 @@ wrangler tail   #ログ確認
 - Slack に投稿されない場合、Bot がチャンネルに招待されているか確認
 - CHANNEL_名前 の環境変数（例：CHANNEL_KAWAKUBO）を忘れず .env に追加
 - index.mjsのALIASに名前の対応表を追加する
+- GitHubの方にも環境変数を忘れず追加(Setting - Secrets and variables - Actions)
 
 ---
 
