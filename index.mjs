@@ -68,6 +68,17 @@ const ALIAS = {
     '松野': 'MATSUNO',
     '丸橋': 'MARUHASHI',
     '左': 'ZUO',
+    '中野陽': 'NAKANOh',
+    '小椋': 'OGURA',
+    '木下': 'KINOSHITA',
+    '小松原': 'KOMATSUBARA',
+    '杉江': 'SUGIE',
+    '田宮': 'TAMIYA',
+    '利根川': 'TONEGAWA',
+    '仲野将馬': 'NAKANOs',
+    '西田': 'NISHIDA',
+    '野村': 'NOMURA',
+    '吉田': 'YOSHIDA'
 };
 
 
