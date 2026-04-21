@@ -56,18 +56,18 @@ jobs:
           CHANNEL_NISHIMOTO: ${{ secrets.CHANNEL_NISHIMOTO }}
           CHANNEL_MATSUNO: ${{ secrets.CHANNEL_MATSUNO }}
           CHANNEL_MARUHASHI: ${{ secrets.CHANNEL_MARUHASHI }}
-          HANNEL_MATSUNO: ${{ secrets.CHANNEL_ZUO }}
-          CHANNEL_UEDA: ${{ secrets.CHANNEL_NAKANOh }}
-          CHANNEL_OGAWA: ${{ secrets.CHANNEL_OGURA }}
-          CHANNEL_KATO: ${{ secrets.CHANNEL_KINOSHITA }}
-          CHANNEL_KIGOSHI: ${{ secrets.CHANNEL_KOMATSUBARA }}
-          CHANNEL_KUBOTA: ${{ secrets.CHANNEL_SUGIE }}
-          CHANNEL_SAKAMOTO: ${{ secrets.CHANNEL_TAMIYA }}
-          CHANNEL_TAKAGI: ${{ secrets.CHANNEL_TONEGAWA }}
-          CHANNEL_TAKAGI: ${{ secrets.CHANNEL_NAKANOs }}
-          CHANNEL_TAKEUCHI: ${{ secrets.CHANNEL_NISHIDA }}
-          CHANNEL_NISHIMOTO: ${{ secrets.CHANNEL_NOMURA }}
-          CHANNEL_MATSUNO: ${{ secrets.CHANNEL_YOSHIDA }}
+          CHANNEL_ZUO: ${{ secrets.CHANNEL_ZUO }}
+          CHANNEL_NAKANOh: ${{ secrets.CHANNEL_NAKANOh }}
+          CHANNEL_OGURA: ${{ secrets.CHANNEL_OGURA }}
+          CHANNEL_KINOSHITA: ${{ secrets.CHANNEL_KINOSHITA }}
+          CHANNEL_KOMATSUBARA: ${{ secrets.CHANNEL_KOMATSUBARA }}
+          CHANNEL_SUGIE: ${{ secrets.CHANNEL_SUGIE }}
+          CHANNEL_TAMIYA: ${{ secrets.CHANNEL_TAMIYA }}
+          CHANNEL_TONEGAWA: ${{ secrets.CHANNEL_TONEGAWA }}
+          CHANNEL_NAKANOs: ${{ secrets.CHANNEL_NAKANOs }}
+          CHANNEL_NISHIDA: ${{ secrets.CHANNEL_NISHIDA }}
+          CHANNEL_NOMURA: ${{ secrets.CHANNEL_NOMURA }}
+          CHANNEL_YOSHIDA: ${{ secrets.CHANNEL_YOSHIDA }}
           SELECT_AUTHORS: ${{ github.event.inputs.authors }}   # ← 追加
           CHANNEL_META: ${{ secrets.CHANNEL_META }}
         run: node index.mjs
