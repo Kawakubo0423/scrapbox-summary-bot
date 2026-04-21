@@ -50,7 +50,7 @@ const ALIAS = {
     '臼井': 'USUI',
     '田中': 'TANAKA',
     '山下': 'YAMASHITA',
-    '川久保': 'KAWAKUBO',
+    '田宮': 'KAWAKUBO',
     '末永': 'SUENAGA',
     '岡茂': 'OKAMO',
     '美馬': 'MIMA',
