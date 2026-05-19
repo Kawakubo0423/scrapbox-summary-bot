@@ -28,10 +28,10 @@ const SELECT_AUTHORS = process.env.SELECT_AUTHORS
 const PROJECT = process.env.SCRAPBOX_PROJECT;
 const COOKIE  = process.env.SCRAPBOX_COOKIE;
 function getZemiWeekTitle() {
-  const baseDate = new Date('2026-04-06'); // Week 1 の月曜
+  const baseDate = new Date('2026-05-11'); // Week 1 の月曜
   const now = new Date(); // 現在の日付
   const diffWeeks = Math.floor((now - baseDate) / (7 * 24 * 60 * 60 * 1000));
-  const weekNum = 1 + diffWeeks;
+  const weekNum = 5 + diffWeeks;
   return `2026前期_Playfulゼミ_Week_${weekNum}`;
 }
 
