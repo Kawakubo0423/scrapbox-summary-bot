@@ -31,7 +31,7 @@ function getZemiWeekTitle() {
   const baseDate = new Date('2026-05-11'); // Week 1 の月曜
   const now = new Date(); // 現在の日付
   const diffWeeks = Math.floor((now - baseDate) / (7 * 24 * 60 * 60 * 1000));
-  const weekNum = 5 + diffWeeks;
+  const weekNum = 4 + diffWeeks;
   return `2026前期_Playfulゼミ_Week_${weekNum}`;
 }
 
