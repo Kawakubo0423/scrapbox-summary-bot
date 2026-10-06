@@ -68,6 +68,8 @@ jobs:
           CHANNEL_NISHIDA: ${{ secrets.CHANNEL_NISHIDA }}
           CHANNEL_NOMURA: ${{ secrets.CHANNEL_NOMURA }}
           CHANNEL_YOSHIDA: ${{ secrets.CHANNEL_YOSHIDA }}
+          CHANNEL_SU: ${{ secrets.CHANNEL_SU }}
+          CHANNEL_ZHANG: ${{ secrets.CHANNEL_ZHANG }}
           SELECT_AUTHORS: ${{ github.event.inputs.authors }}   # ← 追加
           CHANNEL_META: ${{ secrets.CHANNEL_META }}
         run: node index.mjs
