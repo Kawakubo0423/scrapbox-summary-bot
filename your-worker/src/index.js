@@ -69,7 +69,7 @@ async function slackUpdate(token, data){
 async function fetchSection(project, page, anchor, cookie) {
   const res = await fetch(
     `https://scrapbox.io/api/pages/${project}/${encodeURIComponent(page)}`,
-    { headers: { Cookie: `connect.sid=${cookie}` } }
+    { headers: { Cookie: cookie } }
   );
   const pageJson = await res.json();
 
