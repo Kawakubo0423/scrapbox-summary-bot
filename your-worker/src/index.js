@@ -84,7 +84,7 @@ async function fetchSection(project, page, anchor, cookie) {
   for (let i = start + 1; i < pageJson.lines.length; i++) {
     const t = pageJson.lines[i].text.replace(/^\t*/, "");
     // 次見出しで終了
-    if (/^\s*\|?>?\s*\[\*\*\s*🎤|\s*\|?>\s*メタなこと/.test(t)) break;
+    if (/^\s*\|?>?\s*(?:\[\*\*\s*🎤|\[\*\*\s*メタなこと\s*\])/.test(t)) break;
     lines.push(t);
   }
   return lines.join("\n");
