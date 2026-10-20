@@ -80,7 +80,7 @@ const ALIAS = {
     '野村': 'NOMURA',
     '吉田': 'YOSHIDA',
     'SU': 'SU',
-    'ZHANG': 'ZHANG'
+    'Zhang': 'ZHANG'
 };
 
 
